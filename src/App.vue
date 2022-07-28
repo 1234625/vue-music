@@ -1,32 +1,35 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <m-header></m-header>
+    <tab></tab>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import MHeader from 'components/my-header/my-header.vue'
+import Tab from 'components/tab/tab.vue'
+export default {
+  name: 'VueMusicApp',
 
-#nav {
-  padding: 30px;
-}
+  data() {
+    return {
+      name: 'why'
+    }
+  },
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  mounted() {},
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  methods: {},
+  components: {
+    MHeader,
+    Tab
+  }
 }
+</script>
+
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+@import '../src/common/stylus/variable.styl';
 </style>
