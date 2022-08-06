@@ -41,7 +41,7 @@
         <loading :title="'正在加载中'"> </loading>
       </div>
     </scroll>
-    <!-- <router-view></router-view> -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -51,11 +51,11 @@ import { ERR_OK } from 'api/config'
 import Slider from 'base/slider/slider.vue'
 import Scroll from 'base/scroll/scroll.vue'
 import Loading from 'base/loading/loading'
-// import { playlistMixin } from 'common/js/mixin'
-// import { mapMutations } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
+import { mapMutations } from 'vuex'
 
 export default {
-  // mixins: [playlistMixin],
+  mixins: [playlistMixin],
   components: {
     Slider,
     Scroll,
@@ -71,7 +71,11 @@ export default {
     this._getRecommend()
     this._getDiscList()
   },
-  mounted() {},
+  mounted() {
+    setTimeout(() => {
+      // console.log(this.discList)
+    }, 2000)
+  },
   activated() {
     this.$refs.scroll.refresh()
   },
@@ -90,21 +94,21 @@ export default {
           this.discList = res.data.list
         }
       })
-    }
-    /*  handlePlaylist(playList) {
+    },
+    handlePlaylist(playList) {
       const bottom = playList.length > 0 ? '60px' : ''
       this.$refs.recommend.style.bottom = bottom
       this.$refs.scroll.refresh()
-    }, */
-    /* selectItem(item) {
+    },
+    selectItem(item) {
       this.$router.push({
         path: `/recommend/${item.dissid}`
       })
       this.setDisc(item)
-    } */
-    /* ...mapMutations({
+    },
+    ...mapMutations({
       setDisc: 'SET_DISC'
-    }) */
+    })
   }
 }
 </script>

@@ -27,7 +27,7 @@ export function getDiscList() {
     categoryId: 10000000,
     rnd: Math.random(),
     format: 'json'
-    /* 将返回的jsonp格式化为jsonduixiang */
+    /* 将返回的jsonp格式化为json对象 */
   })
 
   return axios
@@ -62,7 +62,7 @@ export function getSongList(disstid) {
       needNewCode: 0
     }
   )
-  /*   return axios
+  return axios
     .get(url, {
       params: data
     })
@@ -70,5 +70,5 @@ export function getSongList(disstid) {
       let result = res.data.substring(21, res.data.length - 1)
       result = JSON.parse(result)
       return Promise.resolve(result)
-    }) */
+    })
 }

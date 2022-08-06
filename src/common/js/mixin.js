@@ -4,7 +4,7 @@ import { shuffle } from 'common/js/util'
 
 export const playlistMixin = {
   computed: {
-    ...mapGetters(['playList'])
+    ...mapGetters(['playList', 'fullScreen'])
   },
   mounted() {
     this.handlePlaylist(this.playList)
@@ -30,8 +30,8 @@ export const playerMixin = {
       return this.mode === playMode.sequence
         ? 'icon-sequence'
         : this.mode === playMode.loop
-          ? 'icon-loop'
-          : 'icon-random'
+        ? 'icon-loop'
+        : 'icon-random'
     },
     ...mapGetters([
       'sequenceList',

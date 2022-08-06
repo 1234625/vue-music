@@ -104,7 +104,6 @@ export default {
     },
     // 初始化轮播图下面点
     _initDots() {
-      // console.log(this.children.length)
       this.dots = new Array(this.children.length - 2)
     }
   }

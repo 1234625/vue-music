@@ -1,6 +1,7 @@
 <template>
-  <div class="singer">
-    <list-view :data="singers"></list-view>
+  <div class="singer" ref="singer">
+    <list-view :data="singers" @select="selectSinger" ref="list"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -8,12 +9,15 @@
 import { getSingerList } from 'api/singer.js'
 import { ERR_OK } from 'api/config'
 import Singer from 'common/js/Singer'
+import { mapMutations } from 'vuex'
+import { playlistMixin } from 'common/js/mixin'
 
 import ListView from 'base/listview/listview.vue'
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 export default {
   name: 'VueMusicSinger',
+  mixins: [playlistMixin],
   components: {
     ListView
   },
@@ -30,12 +34,22 @@ export default {
   mounted() {},
 
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.singer.style.bottom = bottom
+      this.$refs.list.refresh()
+    },
+    // 监听子组件发射的事件
+    selectSinger(singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      })
+      this.setSinger(singer)
+    },
     _getSingerList() {
       getSingerList().then((res) => {
         if (ERR_OK === res.code) {
           this.singers = this._normalizeSinger(res.data.list)
-          // this.data = res.data
-          // console.log(this.singers)
         }
       })
     },
@@ -96,7 +110,10 @@ export default {
       })
       // 返回以 热门 为头部其他顺序为 A-Z 的顺序数据队列
       return hot.concat(ret)
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   }
 }
 </script>

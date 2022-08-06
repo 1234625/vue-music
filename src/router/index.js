@@ -2,28 +2,28 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 const Recommend = (resolve) => {
-  import('components/recommend/recommend').then((module) => {
+  import('views/recommend/recommend').then((module) => {
     resolve(module)
   })
 }
-
 const Rank = (resolve) => {
-  import('components/rank/rank').then((module) => {
+  import('views/rank/rank').then((module) => {
     resolve(module)
   })
 }
-
 const Singer = (resolve) => {
-  import('components/singer/singer').then((module) => {
+  import('views/singer/singer').then((module) => {
     resolve(module)
   })
 }
-
 const Search = (resolve) => {
-  import('components/search/search').then((module) => {
+  import('views/search/search').then((module) => {
     resolve(module)
   })
 }
+const SingerDetail = () => import('components/singer-detail/singer-detail.vue')
+const Disc = () => import('components/disc/disc.vue')
+const TopList = () => import('components/top-list/top-list.vue')
 Vue.use(VueRouter)
 const routes = [
   {
@@ -33,7 +33,13 @@ const routes = [
   {
     path: '/recommend',
     name: 'Recommend',
-    component: Recommend
+    component: Recommend,
+    children: [
+      {
+        path: ':id',
+        component: Disc
+      }
+    ]
   },
   {
     path: '/search',
@@ -43,12 +49,24 @@ const routes = [
   {
     path: '/rank',
     name: 'Rank',
-    component: Rank
+    component: Rank,
+    children: [
+      {
+        path: ':id',
+        component: TopList
+      }
+    ]
   },
   {
     path: '/singer',
     name: 'Singer',
-    component: Singer
+    component: Singer,
+    children: [
+      {
+        path: ':id',
+        component: SingerDetail
+      }
+    ]
   }
 ]
 

@@ -1,0 +1,3 @@
+# get https://api.uomg.com/api/rand.music?sort=热歌榜&format=json
+get https://api.uomg.com/api/rand.music?sort=热歌榜&format=json
+# get https://api.uomg.com/api/icp?domain=1526.fun

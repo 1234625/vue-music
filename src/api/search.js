@@ -1,10 +1,8 @@
 import jsonp from 'common/js/jsonp'
-import {
-  commonParams,
-  options
-} from './config'
+import { commonParams, options } from './config'
 import axios from 'axios'
 
+// 获取热点词
 export function getHotKey() {
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg'
 
@@ -16,7 +14,7 @@ export function getHotKey() {
 
   return jsonp(url, data, options)
 }
-
+// 搜索相关api
 export function search(query, page, zhida, perpage) {
   const url = '/api/search'
 
@@ -39,11 +37,13 @@ export function search(query, page, zhida, perpage) {
   })
 
   // return jsonp(url, data, options)
-  return axios.get(url, {
-    params: data
-  }).then(res => {
-    let result = res.data.substring(9, res.data.length - 1)
-    result = JSON.parse(result)
-    return Promise.resolve(result)
-  })
+  return axios
+    .get(url, {
+      params: data
+    })
+    .then((res) => {
+      let result = res.data.substring(9, res.data.length - 1)
+      result = JSON.parse(result)
+      return Promise.resolve(result)
+    })
 }

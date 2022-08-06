@@ -36,37 +36,59 @@ export default {
     data: {
       type: Array,
       default: null
+    },
+    listenScroll: {
+      type: Boolean,
+      default: false
+    },
+    beforeScroll: {
+      type: Boolean,
+      default: false
     }
   },
 
   mounted() {
-    // 创建bs对象
-    this.bs = new BScroll(this.$refs.wrapper, {
-      observeDOM: true,
-      scrollY: true,
-      click: true,
-      probeType: this.probeType,
-      pullUpLoad: this.pullUp,
-      observeImage: {
-        debounceTime: 100 // ms  当图片加载失败100ms后调用refresh方法 重新计算可滚动的高度或者宽度
-      }
-    })
-    // 监听位置信息
-    this.bs.on('scroll', (position) => {
-      this.$emit('scroll', position)
-    })
-
-    // 监听上拉加载事件
-    if (this.pullUp) {
-      this.bs.on('pullingUp', () => {
-        this.$emit('pullingup')
-        // 2.x版本改版只能在 上拉事件触发以后调用finishPullUp()方法 调用下一个上拉事件
-        this.bs.finishPullUp()
-      })
-    }
+    setTimeout(() => {
+      this._initScroll()
+    }, 20)
   },
 
   methods: {
+    // 初始化滚动
+    _initScroll() {
+      // 创建bs对象
+      this.bs = new BScroll(this.$refs.wrapper, {
+        observeDOM: true,
+        scrollY: true,
+        click: true,
+        probeType: this.probeType,
+        pullUpLoad: this.pullUp,
+        observeImage: {
+          debounceTime: 100 // ms  当图片加载失败100ms后调用refresh方法 重新计算可滚动的高度或者宽度
+        }
+      })
+      if (this.listenScroll) {
+        // 监听位置信息
+        this.bs.on('scroll', (position) => {
+          this.$emit('scroll', position)
+        })
+      }
+      if (this.beforeScroll) {
+        // 滚动开始之前
+        this.bs.on('beforeScrollStart', () => {
+          this.$emit('beforeScroll')
+        })
+      }
+
+      // 监听上拉加载事件
+      if (this.pullUp) {
+        this.bs.on('pullingUp', () => {
+          this.$emit('pullingup')
+          // 2.x版本改版只能在 上拉事件触发以后调用finishPullUp()方法 调用下一个上拉事件
+          this.finishPullUp()
+        })
+      }
+    },
     scrollto(x, y, time = 300) {
       this.bs && this.bs.scrollTo(x, y, time)
     },
@@ -75,11 +97,16 @@ export default {
     },
     refresh() {
       this.bs && this.bs.refresh()
-      // this.bs.refresh()
     },
     // 监听y轴位置
     getScrollY() {
       return this.bs ? this.bs.y : 0
+    },
+    scrollTo() {
+      this.bs && this.bs.scrollTo.apply(this.bs, arguments)
+    },
+    scrollToElement() {
+      this.bs && this.bs.scrollToElement.apply(this.bs, arguments)
     }
   },
   watch: {
