@@ -29,7 +29,7 @@
             </ul>
           </div>
           <!-- 搜索历史 -->
-          <!-- <div class="search-history" v-show="searchHistory.length">
+          <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
               <span @click="showConfirm" class="clear">
@@ -41,7 +41,7 @@
               @select="addQuery"
               @delete="deleteSearchHistory"
             ></search-list>
-          </div> -->
+          </div>
         </div>
       </scroll>
     </div>
@@ -54,12 +54,12 @@
         @listScroll="blurInput"
       ></suggest>
     </div>
-    <!-- <confirm
+    <confirm
       ref="confirm"
       @confirm="clearSearchHistory"
       text="是否清空所有搜索历史"
       confirmBtnText="清空"
-    ></confirm> -->
+    ></confirm>
     <!-- <router-view></router-view> -->
   </div>
 </template>
@@ -67,8 +67,8 @@
 <script>
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
-// import SearchList from 'base/search-list/search-list'
-// import confirm from 'base/confirm/confirm'
+import SearchList from 'base/search-list/search-list.vue'
+import Confirm from 'base/confirm/confirm'
 import Scroll from 'base/scroll/scroll'
 import { getHotKey } from 'api/search'
 import { ERR_OK } from 'api/config'
@@ -79,8 +79,8 @@ export default {
   components: {
     SearchBox,
     Suggest,
-    // SearchList,
-    // confirm,
+    SearchList,
+    Confirm,
     Scroll
   },
   data() {
@@ -101,6 +101,7 @@ export default {
     }
   },
   watch: {
+    // 监听选中歌曲变化
     query(newQuery) {
       if (!newQuery) {
         setTimeout(() => {

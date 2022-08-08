@@ -42,6 +42,7 @@ export const playerMixin = {
     ])
   },
   methods: {
+    // 改变播放模式
     changeMode() {
       const mode = (this.mode + 1) % 3
       this.setPlayMode(mode)
@@ -54,12 +55,14 @@ export const playerMixin = {
       this.resetCurrentIndex(list)
       this.setPlayList(list)
     },
+    // 重置当前列表索引
     resetCurrentIndex(list) {
       const index = list.findIndex((item) => {
         return item.id === this.currentSong.id
       })
       this.setCurrentIndex(index)
     },
+    // 切换是否 收藏
     toggleFavorite(song) {
       if (this.isFavorite(song)) {
         this.deleteFavoriteSong(song)

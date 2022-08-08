@@ -12,7 +12,7 @@ const state = {
   disc: {}, // 推荐页歌单
   topList: {}, // 排行列表
   searchHistory: loadSearch(),
-  playHistory: loadPlay(),
+  playHistory: loadPlay(), // 从localstroge内存中读取 playHistory 的值
   favoriteList: loadFavorite()
 }
 export default state

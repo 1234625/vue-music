@@ -24,6 +24,7 @@ const Search = (resolve) => {
 const SingerDetail = () => import('components/singer-detail/singer-detail.vue')
 const Disc = () => import('components/disc/disc.vue')
 const TopList = () => import('components/top-list/top-list.vue')
+const UserCenter = () => import('components/user-center/user-center.vue')
 Vue.use(VueRouter)
 const routes = [
   {
@@ -67,6 +68,10 @@ const routes = [
         component: SingerDetail
       }
     ]
+  },
+  {
+    path: '/user',
+    component: UserCenter
   }
 ]
 

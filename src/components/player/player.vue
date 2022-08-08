@@ -20,9 +20,7 @@
             <i class="icon-back"></i>
           </div>
           <h1 class="title" v-html="currentSong.name"></h1>
-          <!-- <h1 class="title" v-html="'起风了'"></h1> -->
           <h2 class="subtitle" v-html="currentSong.singer"></h2>
-          <!-- <h2 class="subtitle" v-html="'买辣椒也用券'"></h2> -->
         </div>
         <!--中间cd部分-->
         <div
@@ -96,37 +94,43 @@
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <!-- <i class="icon"></i> -->
-              <i class="icon-not-favorite"></i>
+              <i
+                @click="toggleFavorite(currentSong)"
+                class="icon"
+                :class="getFavoriteIcon(currentSong)"
+              ></i>
             </div>
           </div>
         </div>
       </div>
     </transition>
     <!-- 播放器底部小状态栏显示 -->
-    <div class="mini-player" v-show="!fullScreen" @click="open">
-      <div class="icon">
-        <img width="40" height="40" :src="currentSong.image" :class="cdCls" />
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="open">
+        <div class="icon">
+          <img width="40" height="40" :src="currentSong.image" :class="cdCls" />
+        </div>
+        <div class="text">
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc" v-html="currentSong.singer"></p>
+        </div>
+        <div class="control">
+          <progress-circle :radius="radius" :percent="percent">
+            <i
+              @click.stop="togglePlaying"
+              class="icon-mini"
+              :class="miniIcon"
+            ></i>
+          </progress-circle>
+        </div>
+        <div class="control" @click.stop="showPlaylist">
+          <i class="icon-playlist"></i>
+        </div>
       </div>
-      <div class="text">
-        <h2 class="name" v-html="currentSong.name"></h2>
-        <p class="desc" v-html="currentSong.singer"></p>
-      </div>
-      <div class="control">
-        <progress-circle :radius="radius" :percent="percent">
-          <i
-            @click.stop="togglePlaying"
-            class="icon-mini"
-            :class="miniIcon"
-          ></i>
-        </progress-circle>
-      </div>
-      <div class="control">
-        <i class="icon-playlist"></i>
-      </div>
-    </div>
+    </transition>
+    <!-- 添加歌曲组件 -->
+    <play-list ref="playlist"></play-list>
     <!-- 音频播放 -->
-    <!-- src="http://m801.music.126.net/20220802155739/21a9de871f266cc80d39cb483543f307/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096462001/3736/8530/b985/28dfec1d14d42d618a6816c1cdb5fefd.mp3" -->
     <audio
       :src="currentSongUrl"
       @play="ready"
@@ -140,15 +144,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import Lyric from 'lyric-parser'
 import animations from 'create-keyframe-animation'
 import { getSongVkey } from 'api/song'
+import { playerMixin } from 'common/js/mixin'
 import Scroll from 'base/scroll/scroll.vue'
 import ProgressBar from 'base/progress-bar/progress-bar.vue'
 import ProgressCircle from 'base/progress-circle/progress-circle'
 import { playMode } from 'common/js/config.js'
 import { shuffle } from 'common/js/util'
+import PlayList from '../playlist/playlist.vue'
 
 import { prefixStyle } from 'common/js/dom'
 
@@ -157,7 +163,7 @@ const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
   name: 'VueMusicPlayer',
-
+  mixins: [playerMixin],
   data() {
     return {
       songReady: false,
@@ -177,6 +183,10 @@ export default {
   },
 
   methods: {
+    // 控制显示播放列表
+    showPlaylist() {
+      this.$refs.playlist.show()
+    },
     // 控制全屏显示
     back() {
       this.setFullScreen(false)
@@ -243,10 +253,10 @@ export default {
     // 防止切换歌曲快速点击 产生错误
     ready() {
       this.songReady = true
-      // if (!this.currentSong.url) {
-      //   return
-      // }
-      // this.savePlayHistory(this.currentSong)
+      if (!this.currentSong.url) {
+        return
+      }
+      this.savePlayHistory(this.currentSong)
     },
     error() {
       this.currentSongUrl = undefined
@@ -472,6 +482,9 @@ export default {
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAY_LIST'
+    }),
+    ...mapActions({
+      savePlayHistory: 'savePlayHistory'
     })
   },
   computed: {
@@ -534,9 +547,6 @@ export default {
           this.getLyric()
         }, 1000)
       })
-      // this.$nextTick(() => {
-      //   this.$refs.audio.play()
-      // })
     },
     // 是否播放
     playing(newPlaying) {
@@ -549,7 +559,8 @@ export default {
   components: {
     Scroll,
     ProgressBar,
-    ProgressCircle
+    ProgressCircle,
+    PlayList
   }
 }
 </script>
